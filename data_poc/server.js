@@ -9,7 +9,7 @@ const path = require("path");
 // Sets up the Express App
 // =============================================================
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3002;
 
 // Sets up the Express app to handle data parsing
 app.use(express.urlencoded({ extended: true }));
@@ -28,7 +28,8 @@ app.get("/", function(req, res) {
 });
 
 app.get("/note", function(req, res) {
-  res.json(dbJSON);
+  res.sendFile(path.join(__dirname, "notes.html"));
+  //res.json(dbJSON);
 });
 
 app.post("/note", function(req, res) {
@@ -56,7 +57,7 @@ app.post("/note", function(req, res) {
 });
 
 app.get("*", function(req, res) {
-  res.send("Sending you the homepage");
+  res.sendFile(path.join(__dirname, "index.html"));
 }); //catch all, should be last "get" in file
 
 
