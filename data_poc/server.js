@@ -6,6 +6,8 @@ const fs = require("fs");
 const dbJSON = require("./db.json");
 const path = require("path");
 
+var noteData = require("../data_poc/noteData");
+
 // Sets up the Express App
 // =============================================================
 const app = express();
@@ -21,8 +23,6 @@ app.use(express.json());
 // =============================================================
 // Basic route that sends the user first to the AJAX Page
 
-
-
 app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
@@ -32,11 +32,30 @@ app.get("/note", function(req, res) {
   //res.json(dbJSON);
 });
 
-app.post("/note", function(req, res) {
+app.post("/notes", function(req, res) {
   // Validate request body
   if(!req.body.title) {
     return res.json({error: "Missing required title"});
   }
+
+module.exports = function(app) {
+  
+  
+  //api routes go here
+app.get("/api/notes", function(req, res) {
+  return res.json(noteData);
+})
+
+app.post("/api/notes", function(req, res){
+  noteData.push(req.body);
+  console.log("data posted");
+})
+
+}
+
+ //api/note
+  //api/notes
+  //api/note: note
 
   // Copy request body and generate ID
   const note = {...req.body, id: uuidv4()}
@@ -45,6 +64,7 @@ app.post("/note", function(req, res) {
   dbJSON.push(note);
 
   // Saves data to file by persisting in memory variable dbJSON to db.json file.
+
   // This is needed because when we turn off server we loose all memory data like pbJSON variable.
   // Saving to file allows us to read previous notes (before server was shutdown) from file.
   fs.writeFile(path.join(__dirname, "db.json"), JSON.stringify(dbJSON), (err) => {
