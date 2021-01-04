@@ -14,8 +14,9 @@ const app = express();
 const PORT = process.env.PORT || 3002;
 
 // Sets up the Express app to handle data parsing
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static("./public"));
 
 
 
@@ -27,9 +28,13 @@ app.get("/", function(req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-app.get("/note", function(req, res) {
+app.get("/notes", function(req, res) {
   res.sendFile(path.join(__dirname, "notes.html"));
   //res.json(dbJSON);
+});
+
+app.get("/note", function(req, res) {
+  res.json(dbJSON);
 });
 
 app.post("/notes", function(req, res) {
@@ -43,15 +48,15 @@ module.exports = function(app) {
   
   //api routes go here
 app.get("/api/notes", function(req, res) {
-  return res.json(noteData);
-})
+  res.json(dbJSON);
+});
 
 app.post("/api/notes", function(req, res){
   noteData.push(req.body);
   console.log("data posted");
-})
+});
 
-}
+};
 
  //api/note
   //api/notes
