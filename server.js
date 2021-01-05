@@ -3,15 +3,16 @@
 const express = require("express");
 const { v4: uuidv4 } = require('uuid');
 const fs = require("fs");
-const dbJSON = require("./db.json");
 const path = require("path");
+const dbJSON = require("./data_poc/db.json");
+
 
 //var noteData = require("../data_poc/noteData");
 
 // Sets up the Express App
 // =============================================================
 const app = express();
-const PORT = process.env.PORT || 3002;
+const PORT = process.env.PORT || 3001;
 
 // Sets up the Express app to handle data parsing
 app.use(express.json());
@@ -24,11 +25,11 @@ app.use(express.static("./public"));
 // =============================================================
 // Basic route that sends the user first to the AJAX Page
 
-app.get("/", function(req, res) {
-  res.sendFile(path.join(__dirname, "./public/index.html"));
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, './public/index.html'));
 });
 
-app.get("/notes", function(req, res) {
+app.get("/notes", (req, res) => {
   res.sendFile(path.join(__dirname, "./public/notes.html"));
   //res.json(dbJSON);
 });
