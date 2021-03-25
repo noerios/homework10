@@ -7,12 +7,13 @@ const fs = require("fs");
 const dbJSON = require("./data_poc/db.json");
 
 
+
 //var noteData = require("../data_poc/noteData");
 
 // Sets up the Express App
 // =============================================================
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 // Sets up the Express app to handle data parsing
 app.use(express.json());
@@ -25,39 +26,42 @@ app.use(express.static("./public"));
 // =============================================================
 // Basic route that sends the user first to the AJAX Page
 
-app.get("/", (req, res) => {
+app.get("/", function (req, res) {
   res.sendFile(path.join(__dirname, "./public/index.html"));
 });
 
-app.get("/notes", (req, res) => {
+app.get("/notes", function (req, res) {
   res.sendFile(path.join(__dirname, "./public/notes.html"));
   //res.json(dbJSON);
 });
 
-app.get("/note", function(req, res) {
+
+
+app.get("/api/note", function(req, res) {
   res.json(dbJSON);
 });
 
-app.post("/notes", function(req, res) {
+app.post("/api/notes", function(req, res) {
   // Validate request body
   if(!req.body.title) {
     return res.json({error: "Missing required title"});
   }
 
-module.exports = function(app) {
+
+//module.exports = function(app) {
   
   
   //api routes go here
-app.get("/api/notes", function(req, res) {
-  res.json(dbJSON);
-});
+// app.get("/api/notes", function(req, res) {
+//   res.json(dbJSON);
+// });
 
-app.post("/api/notes", function(req, res){
-  noteData.push(req.body);
-  console.log("data posted");
-});
+// app.post("/api/notes", function(req, res){
+//   noteData.push(req.body);
+//   console.log("data posted");
+// });
 
-};
+// };
 
  //api/note
   //api/notes
@@ -86,6 +90,23 @@ app.get("*", function(req, res) {
   res.sendFile(path.join(__dirname, "index.html"));
 }); //catch all, should be last "get" in file
 
+app.delete("/api/notes/:id", function (req, res) {
+  let newId = req.params.id;
+  dbJSON = dbJSON.filter(function (note) {
+    if (newId !== note.id) {
+      return true;
+    }
+    else{
+      return false;
+    }
+  });
+  console.log(dbJSON);
+  fs.writeFile("db/db.json". jSON.stringify(dbJSON), function (error) {
+    if (err)
+    throw err;
+    return res.json(true);
+  });
+});
 
 // Starts the server to begin listening
 // =============================================================
